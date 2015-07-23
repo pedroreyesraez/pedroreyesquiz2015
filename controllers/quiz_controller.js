@@ -69,10 +69,29 @@ exports.answer = function(req,res){
 };
 
 
-
-
-exports.index = function(req,res){
-	models.Quiz.findAll().then(function(quizes){
-		res.render('quizes/index.ejs',{quizes: quizes});
-	}).catch(function(error){next(error);})
+exports.index = function(req,res)
+{
+	var busqueda = req.query.search;
+	
+	if ( busqueda===undefined || busqueda === ''  )
+	{
+		// En el caso de que se pulse desde el menu de navegación o la
+		// consulta esté vacia.
+		models.Quiz.findAll().then(function(quizes){
+			res.render('quizes/index.ejs',{quizes: quizes});
+		}).catch(function(error){next(error);})	
+	}
+	else
+	{
+		busqueda = '%' + busqueda + '%';
+		busqueda = busqueda.replace(/ /g,'%');
+		//En el caso que hay escrito algo en el buscador de preguntas
+		console.log(busqueda);
+		models.Quiz.findAll({where:['pregunta like ?',busqueda]}).then(function(quizes){
+			res.render('quizes/index.ejs',{quizes: quizes});
+		}).catch(function(error){next(error);})	
+		
+	}
 };
+		
+	
