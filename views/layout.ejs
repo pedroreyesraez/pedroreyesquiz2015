@@ -18,7 +18,12 @@
 		<div id="page-wrap">
 			<header class="main" id="h1">
 				<% if(!session.user){%>
-				<span class="right"><a href="/login">Login</a></span>
+					<span class="right"><a href="/login">Login</a></span>
+					<br />
+					<% if(session.expirado){%>
+						<span class="right"  id='ErrorMsgs'>La sesión ha expirado. </span>
+						<% delete session.expirado %>
+					<%}%>
 				<%}else{ %>
 					<span class="right"><%=session.user.username%><br /><a href="/logout">Logout</></a></span>
 				<%}%>

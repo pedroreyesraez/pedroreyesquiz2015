@@ -30,9 +30,33 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(partials());
 
+app.use(function(req,res,next) {
+	console.log('MW control de tiempo en sesion');
+	if (req.session.user) { // Comprobamos si estamos en una sesión
+		if (!req.session.marcatiempo){ // Primera vez que se pone la marca de teimpo
+			console.log('MW control de tiempo en sesion: Primera marca de tiempo');
+			req.session.marcatiempo=(new Date()).getTime();
+
+		} else {
+			if ((new Date()).getTime() - req.session.marcatiempo > 12000) {
+				console.log('MW control de tiempo en sesion: Cierre de sesión');
+				delete req.session.user;
+				delete req.session.marcatiempo;
+				req.session.expirado=true;
+			
+			} else{
+				console.log('MW control de tiempo en sesion: Refrescar tiempo');
+				req.session.marcatiempo=(new Date()).getTime();
+			}
+		}
+	}
+	next();
+});
+
 //Helpers dinámicos:
 app.use(function(req,res,next){
 	// guardar path en session.redir para despues del login
+
 	if(!req.path.match(/\/login|\/logout/)){
 		req.session.redir = req.path;
 	}
@@ -43,6 +67,8 @@ app.use(function(req,res,next){
 });
 
 app.use('/', routes);
+
+
 
 
 // catch 404 and forward to error handler
@@ -77,6 +103,13 @@ app.use(function(err, req, res, next) {
 		errors: []
     });
 });
+
+
+
+
+
+
+
 
 
 module.exports = app;
