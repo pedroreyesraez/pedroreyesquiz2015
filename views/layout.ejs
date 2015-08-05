@@ -21,7 +21,7 @@
 					<span class="right"><a href="/login">Login</a></span>
 					<br />
 					<% if(session.expirado){%>
-						<span class="right"  id='ErrorMsgs'>La sesión ha expirado. </span>
+						<span class="right"  id='ErrorMsgs'>La sesión ha expirado!!</span>
 						<% delete session.expirado %>
 					<%}%>
 				<%}else{ %>
@@ -35,6 +35,7 @@
 				<span><a href="/">Inicio</a></span>
 				<span><a href="/quizes">Preguntas</a></span>
 				<span><a href="/author">Autor</a></span>
+				<span><a href="/quizes/statistics">Estadisticas</a></span>
 			</nav>
 
 		

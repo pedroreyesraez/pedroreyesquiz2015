@@ -30,22 +30,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(partials());
 
+// MW de autodexconexión
 app.use(function(req,res,next) {
 	console.log('MW control de tiempo en sesion');
 	if (req.session.user) { // Comprobamos si estamos en una sesión
-		if (!req.session.marcatiempo){ // Primera vez que se pone la marca de teimpo
-			console.log('MW control de tiempo en sesion: Primera marca de tiempo');
+		if (!req.session.marcatiempo){ // Primera vez que se pone la marca de tiempo
 			req.session.marcatiempo=(new Date()).getTime();
 
 		} else {
 			if ((new Date()).getTime() - req.session.marcatiempo > 12000) {
-				console.log('MW control de tiempo en sesion: Cierre de sesión');
 				delete req.session.user;
 				delete req.session.marcatiempo;
-				req.session.expirado=true;
+				req.session.expirado=true; // Inidico que ha expirado la sesión para la próxima visualización
+										   // que se ha de encargar de borrar la sesión para que vuelva a salir el mensaje.
 			
 			} else{
-				console.log('MW control de tiempo en sesion: Refrescar tiempo');
+				// Actualizamos el último acceso.
 				req.session.marcatiempo=(new Date()).getTime();
 			}
 		}

@@ -4,6 +4,7 @@ var router = express.Router();
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
 var sessionController = require('../controllers/session_controller');
+var statisticsController = require('../controllers/statistics_Controller');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -43,5 +44,9 @@ router.delete('/quizes/:quizId(\\d+)',		sessionController.loginRequired,	quizCon
 router.get('/quizes/:quizId(\\d+)/comments/new',commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments',commentController.create);
 router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',	sessionController.loginRequired, commentController.publish);  // Deberiar de ser PUT para el cumplir con el interfaz REST
+
+// Definición de rutas de estadísticas
+router.get('/quizes/statistics',			sessionController.loginRequired,	statisticsController.view);
+
 
 module.exports = router;
